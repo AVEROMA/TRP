@@ -1,5 +1,9 @@
 import numpy as np 
 import math
+import tkinter as tk
+from tkinter import *
+
+from sqlalchemy import Interval
 class Workshop:
     def __init__(self):
         self.count_machine_one = 0
@@ -99,7 +103,8 @@ class Details:
     def setTime_queue(self, time):      #установить время в очереди
         self.time_que += time
     
-def work(time_modeling):    #моделирование
+def work():   
+    time_modeling = int(interval_value.get()) #моделирование
     i = 1
     index = 1
     details_queue = []
@@ -142,21 +147,22 @@ def work(time_modeling):    #моделирование
     count_one, count_two, count_three = workshop.getCount_machine()
     time_one, time_two, time_three = workshop.getTime_machine()
     max_one, max_two, max_three = workshop.getMax_machine(1), workshop.getMax_machine(2), workshop.getMax_machine(3)
-    print("avg details in queue: " + str(sum(size_queue_details)/len(size_queue_details)))
-    print("avg time in queue: " + str(sum(queue_time)/len(queue_time)))
-    print("all detail: " + str(all_detail))
-    print("serving detail: " + str(count_three))
-    print("coeff machine one: " + str(time_one / time_modeling) + "\n"
+
+    text.insert(END,("avg details in queue: " + str(sum(size_queue_details)/len(size_queue_details)) + "\n"))
+    text.insert(END,("avg time in queue: " + str(sum(queue_time)/len(queue_time)) + "\n"))
+    text.insert(END,("all detail: " + str(all_detail) + "\n"))
+    text.insert(END,("serving detail: " + str(count_three) + "\n"))
+    text.insert(END,("coeff machine one: " + str(time_one / time_modeling) + "\n"
         "coeff machine two: " + str(time_two / time_modeling) + "\n"
-        "coeff machine three: " + str(time_three / time_modeling) + "\n")
+        "coeff machine three: " + str(time_three / time_modeling) + "\n"))
 
-    print("time machine one: " + str(time_one) + "\n"
+    text.insert(END,("time machine one: " + str(time_one) + "\n"
         "time machine two: " + str(time_two) + "\n"
-        "time machine three: " + str(time_three) + "\n")
+        "time machine three: " + str(time_three) + "\n"))
 
-    print("max queue machine one: " + str(max_one) + "\n"
+    text.insert(END,("max queue machine one: " + str(max_one) + "\n"
         "max queue machine two: " + str(max_two) + "\n"
-        "max queue machine three: " + str(max_three) + "\n")
+        "max queue machine three: " + str(max_three) + "\n"))
     
 def add_details(details_queue, workshop ,time_arraived, i): #добавление деталей в очередь
         details_queue.insert(0, Details())
@@ -176,4 +182,26 @@ def work_machine(details_queue,index_details,queue_time,workshop, index):   #р�
 
     return machine_time
 
-work(int(input("Введите интервал времени для моделирования: ")))
+details = Details()
+root = tk.Tk()
+root.title("Лабораторная 3")
+root.geometry("600x350")
+
+interval_label = tk.Label(master = root)
+interval_label ["text"] = "Введите интервал времени для моделирования: "
+interval_label.pack() 
+spinval_1 = StringVar()
+interval_value = tk.Spinbox(master = root, from_=0, to=100, textvariable=spinval_1)
+interval_value.pack()
+
+startWork = tk.Button(master = root,
+                        text = "Рассчитать", 
+                         width=25,height=1,
+                         command=work
+                        )
+startWork.pack()
+
+text = tk.Text(master = root, width=80, height=20)
+text.pack()
+
+root.mainloop()
